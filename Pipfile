@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cookiecutter = "*"
+pandas = "*"
+matplotlib = "*"
+numpy = "*"
+sklearn = "*"
+category-encoders = "*"
+seaborn = "*"
+ipykernel = "*"
+pytest = "*"
+dvc = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.9"
