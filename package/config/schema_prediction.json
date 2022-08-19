@@ -1,0 +1,12 @@
+{	"SampleFileName": "bakkedal_08012022_120000.csv",
+	"LengthOfDateStampInFile": 8,
+	"LengthOfTimeStampInFile": 6,
+	"NumberofColumns" : 99,
+	"ColName": {
+		
+		"Speed": " float",
+		"Draft": " float",
+		"WindSpeed": " float"
+
+	}
+}

@@ -1,0 +1,68 @@
+base:
+  project: big_mart_sales
+  random_state: 42
+  target_col: Item_Outlet_Sales 
+
+data_source:
+  az_source: package/azstore/clientname_data/raw.csv   # dummy azure storage replace with actual
+
+load_data:
+  raw_dataset_csv: package/data/raw/raw.csv
+
+split_data:
+  train_path: package/data/interim/train.csv
+  test_path: package/data/interim/test.csv
+  test_size: 0.2
+
+processed_data:
+  train_path: package/data/processed/train.csv
+  test_path: package/data/processed/test.csv
+
+
+
+estimators:
+  random_forest_regressor:
+    params:
+      n_estimators: 
+        - 10
+        - 50
+        - 100
+        - 130 
+      criterion: 
+        - gini
+        - entropy
+      max_depth: 
+        - 2
+        - 4
+        - 6
+        - 10
+      max_features: 
+        - auto
+        - log2
+      min_samples_leaf:
+        - 2
+  linear_regression:
+  support_vector_regression:
+    params:
+      kernel:
+        - linear
+        - poly
+        - rbf
+        - precomputed
+      degree:
+        - 2
+        - 4
+        - 5
+      C:
+        - 1
+        - 10
+        - 100
+        - 1000  
+
+model_dir: models
+
+reports:
+  params: package/reports/params.json
+  scores: package/reports/scores.json
+
+webapp_model_dir: package/prediction_service/model/model.joblib # for testing purpose only in real case VO UI will be used
