@@ -1,4 +1,4 @@
 [core]
     remote = azstore
 ['remote "azstore"']
-    url = azure://samleuwrnd/poc/data/
+    url = azure://poc/data/
