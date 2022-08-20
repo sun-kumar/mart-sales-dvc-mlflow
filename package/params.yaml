@@ -4,7 +4,7 @@ base:
   target_col: Item_Outlet_Sales 
 
 data_source:
-  az_source: package/azstore/clientname_data/raw.csv   # dummy azure storage replace with actual
+  az_source: azure://samleuwrnd/poc/data/  # dummy azure storage replace with actual
 
 load_data:
   raw_dataset_csv: package/data/raw/raw.csv
