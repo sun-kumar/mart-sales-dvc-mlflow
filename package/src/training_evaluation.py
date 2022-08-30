@@ -10,12 +10,14 @@ import numpy as np
 import argparse
 import joblib
 import json
+from urllib.parse import urlparse
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 from getting_data import read_params
 from preprocessing_transformations import preprocessing,OutletTypeEncoder
 from sklearn.model_selection import GridSearchCV
+import mlflow
 
 
 
@@ -57,60 +59,84 @@ def train_and_evaluate(config_path):
 
     pre_process = preprocessing(config_path)
     
-    rfr = RandomForestRegressor()
+    mlflow_config = config["mlflow_config"]
+    remote_server_uri = mlflow_config["remote_server_uri"]
 
-    model_pipeline = Pipeline(steps=[('get_outlet_binary_columns', OutletTypeEncoder()),('pre_processing',pre_process),
-                                        ('random_forest', rfr)
-                                        ])
-    grid = GridSearchCV(model_pipeline, param_grid=parameteres, cv=5)
-
+    mlflow.set_tracking_uri(remote_server_uri)
+    mlflow.set_experiment(mlflow_config["experiment_name"])
     
-    grid.fit(train_x, train_y)
-
-    predicted_consumption = grid.predict(test_x)
+    with mlflow.start_run(run_name=mlflow_config["run_name"]) as mlops_run:
     
-    (rmse, mae, r2) = eval_metrics(test_y, predicted_consumption)
+        rfr = RandomForestRegressor()
 
-    print("Random Forest Model (max_depth=%f, min_samples_leaf=%f):" % (grid.best_params_['random_forest__max_depth'],
-                                                                         grid.best_params_['random_forest__min_samples_leaf']))
-    print("  RMSE: %s" % rmse)
-    print("  MAE: %s" % mae)
-    print("  R2: %s" % r2)
+        model_pipeline = Pipeline(steps=[('get_outlet_binary_columns', OutletTypeEncoder()),('pre_processing',pre_process),
+                                            ('random_forest', rfr)
+                                            ])
+        grid = GridSearchCV(model_pipeline, param_grid=parameteres, cv=5)
 
-#####################################################
-    scores_file = config["reports"]["scores"]
-    params_file = config["reports"]["params"]
+        
+        grid.fit(train_x, train_y)
 
-    with open(scores_file, "w") as f:
-        scores = {
-            "rmse": rmse,
-            "mae": mae,
-            "r2": r2
-        }
-        json.dump(scores, f, indent=4)
+        predicted_consumption = grid.predict(test_x)
+        
+        (rmse, mae, r2) = eval_metrics(test_y, predicted_consumption)
 
-    with open(params_file, "w") as f:
-        params = {
-            "max_depth": grid.best_params_['random_forest__max_depth'],
-            "min_samples_leaf": grid.best_params_['random_forest__max_depth'],
-        }
-        json.dump(params, f, indent=4)
-#####################################################
+        print("Random Forest Model (max_depth=%f, min_samples_leaf=%f):" % (grid.best_params_['random_forest__max_depth'],
+                                                                            grid.best_params_['random_forest__min_samples_leaf']))
+        print("  RMSE: %s" % rmse)
+        print("  MAE: %s" % mae)
+        print("  R2: %s" % r2)
+        
+        mlflow.log_param("max_depth",grid.best_params_['random_forest__max_depth'])
+        mlflow.log_param("min_samples_leaf", grid.best_params_['random_forest__min_samples_leaf'])
+
+        mlflow.log_metric("RMSE", rmse)
+        mlflow.log_metric("MAE", mae)
+        mlflow.log_metric("R2", r2)
+        
+        
+
+    #####################################################
+        scores_file = config["reports"]["scores"]
+        params_file = config["reports"]["params"]
+
+        with open(scores_file, "w") as f:
+            scores = {
+                "rmse": rmse,
+                "mae": mae,
+                "r2": r2
+            }
+            json.dump(scores, f, indent=4)
+
+        with open(params_file, "w") as f:
+            params = {
+                "max_depth": grid.best_params_['random_forest__max_depth'],
+                "min_samples_leaf": grid.best_params_['random_forest__max_depth'],
+            }
+            json.dump(params, f, indent=4)
+    #####################################################
 
 
-    os.makedirs(model_dir, exist_ok=True)
-    model_path = os.path.join(model_dir, "model.joblib")
+        os.makedirs(model_dir, exist_ok=True)
+        model_path = os.path.join(model_dir, "model.joblib")
 
-    joblib.dump(grid, model_path)
-
-
+        joblib.dump(grid, model_path)
+        
+        tracking_url_type_store = urlparse(mlflow.get_artifact_uri()).scheme
+        if tracking_url_type_store != "file":
+            mlflow.sklearn.log_model(grid, "model", 
+                    registered_model_name=mlflow_config["registered_model_name"])
+        else:
+            mlflow.sklearn.load_model(grid, "model")
+        
+        #####################################################
 
 if __name__=="__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--config", default="params.yaml")
     parsed_args = args.parse_args()
     train_and_evaluate(config_path=parsed_args.config)
-
+                                                                                                                                     
 # Why DVC Remote file name is changed and is not conserved after DVC Push?
 ## Dvc remote is a content-based storage, so names are not preserved.
 #  Dvc creates metafiles (*.dvc files) in your workspace that contain names and those files are usually tracked by git,

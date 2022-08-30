@@ -14,6 +14,7 @@ seaborn = "*"
 ipykernel = "*"
 pytest = "*"
 dvc = "*"
+mlflow = "*"
 
 [dev-packages]
 ipykernel = "*"

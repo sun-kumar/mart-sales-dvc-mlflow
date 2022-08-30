@@ -15,8 +15,8 @@ split_data:
   test_size: 0.2
 
 processed_data:
-  train_path: package/data/processed/train.csv
-  test_path: package/data/processed/test.csv
+  train_path: package/data/interim/train.csv
+  test_path: package/data/interim/test.csv
 
 
 
@@ -64,5 +64,12 @@ model_dir: models
 reports:
   params: package/reports/params.json
   scores: package/reports/scores.json
+
+mlflow_config:
+  artifacts_dir: artifacts
+  experiment_name: model_iteration1
+  run_name: random_forest
+  registered_model_name: random_forest_model
+  remote_server_uri: http://localhost:1234
 
 webapp_model_dir: package/prediction_service/model/model.joblib # for testing purpose only in real case VO UI will be used

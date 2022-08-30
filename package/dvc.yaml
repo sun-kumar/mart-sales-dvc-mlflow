@@ -1,0 +1,48 @@
+stages:
+  loading_data:
+    cmd: python src/data/loading_data.py --config=params.yaml
+    deps:
+    - package/src/data/getting_data.py
+    outs:
+    - package/data/raw/raw.csv
+  
+  split_data:
+    cmd: python src/data/splitting_data.py --config=params.yaml
+    deps:
+    - package/src/data/split_data.py
+    - package/data/raw/raw.csv
+    outs:
+    - package/data/interim/train.csv
+    - package/data/interim/test.csv
+
+  preprocessing_transformation:
+    cmd: python package/src/models/preprocessing_transformations.py --config=params.yaml
+    deps:
+    - package/data/interim/train.csv
+    - package/data/interim/test.csv
+    - package/src/models/preprocessing_transformations.py
+
+  training_evaluation:
+    cmd: python package/src/models/training_evaluation.py --config=params.yaml
+    deps:
+    - package/data/interim/train.csv
+    - package/data/interim/test.csv
+    - package/src/models/preprocessing_transformations.py
+    - package/src/models/training_evaluation.py
+    params:
+    - random_forest.max_depth
+    - random_forest.n_estimators
+    outs:
+    - package/models/model.joblib
+
+    
+
+  log_production_model:
+    cmd: python src/models/production_model_selection.py --config=params.yaml
+    deps:
+    - src/models/production_model_selection.py
+    params:
+    - random_forest.max_depth
+    - random_forest.n_estimators
+    outs:
+    - models/model.joblib
