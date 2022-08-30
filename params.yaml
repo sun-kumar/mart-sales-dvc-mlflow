@@ -7,16 +7,16 @@ data_source:
   az_source: azure://samleuwrnd/poc/data/  # dummy azure storage replace with actual
 
 load_data:
-  raw_dataset_csv: package/data/raw/raw.csv
+  raw_dataset_csv: package/data/raw_files/raw.csv
 
 split_data:
-  train_path: package/data/interim/train.csv
-  test_path: package/data/interim/test.csv
+  train_path: package/data/interim_files/train.csv
+  test_path: package/data/interim_files/test.csv
   test_size: 0.2
 
 processed_data:
-  train_path: package/data/interim/train.csv
-  test_path: package/data/interim/test.csv
+  train_path: package/data/interim_files/train.csv
+  test_path: package/data/interim_files/test.csv
 
 
 

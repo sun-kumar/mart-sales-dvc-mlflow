@@ -80,15 +80,17 @@ def train_and_evaluate(config_path):
         predicted_consumption = grid.predict(test_x)
         
         (rmse, mae, r2) = eval_metrics(test_y, predicted_consumption)
+        best_max_depth=grid.best_params_['random_forest__max_depth']
+        best_min_samples = grid.best_params_['random_forest__min_samples_leaf']
 
-        print("Random Forest Model (max_depth=%f, min_samples_leaf=%f):" % (grid.best_params_['random_forest__max_depth'],
-                                                                            grid.best_params_['random_forest__min_samples_leaf']))
+        print("Random Forest Model (max_depth=%f, min_samples_leaf=%f):" % (best_max_depth,
+                                                                            best_min_samples))
         print("  RMSE: %s" % rmse)
         print("  MAE: %s" % mae)
         print("  R2: %s" % r2)
         
-        mlflow.log_param("max_depth",grid.best_params_['random_forest__max_depth'])
-        mlflow.log_param("min_samples_leaf", grid.best_params_['random_forest__min_samples_leaf'])
+        mlflow.log_param("max_depth",best_max_depth)
+        mlflow.log_param("min_samples_leaf", best_min_samples)
 
         mlflow.log_metric("RMSE", rmse)
         mlflow.log_metric("MAE", mae)
@@ -110,8 +112,8 @@ def train_and_evaluate(config_path):
 
         with open(params_file, "w") as f:
             params = {
-                "max_depth": grid.best_params_['random_forest__max_depth'],
-                "min_samples_leaf": grid.best_params_['random_forest__max_depth'],
+                "max_depth": best_max_depth,
+                "min_samples_leaf": best_min_samples,
             }
             json.dump(params, f, indent=4)
     #####################################################
@@ -136,7 +138,7 @@ if __name__=="__main__":
     args.add_argument("--config", default="params.yaml")
     parsed_args = args.parse_args()
     train_and_evaluate(config_path=parsed_args.config)
-                                                                                                                                     
+                                                                                                                                         
 # Why DVC Remote file name is changed and is not conserved after DVC Push?
 ## Dvc remote is a content-based storage, so names are not preserved.
 #  Dvc creates metafiles (*.dvc files) in your workspace that contain names and those files are usually tracked by git,
