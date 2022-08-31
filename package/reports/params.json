@@ -1,4 +1,4 @@
 {
     "max_depth": 6,
-    "min_samples_leaf": 6
+    "min_samples_leaf": 2
 }

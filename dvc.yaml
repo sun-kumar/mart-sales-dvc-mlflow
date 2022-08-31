@@ -3,9 +3,8 @@ stages:
     cmd: python package/src/getting_from_blob.py --config=params.yaml
     deps:
     - package/src/getting_from_blob.py
-    - package/data/raw_files/raw.csv
     outs:
-    - package/data/raw_files/raw.csv
+    - package/data/raw_files/clientname_data/raw.csv
   
   split_data:
     cmd: python package/src/splitting_data.py --config=params.yaml

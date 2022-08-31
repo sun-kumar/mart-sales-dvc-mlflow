@@ -13,7 +13,7 @@ def log_production_model(config_path):
     remote_server_uri = mlflow_config["remote_server_uri"]
 
     mlflow.set_tracking_uri(remote_server_uri)
-    runs = mlflow.search_runs(experiment_ids=1)
+    runs = mlflow.search_runs(experiment_names=mlflow_config['experiment_name'])
     min_rmse = min(runs["metrics.rmse"])
     min_rmse_run_id = list(runs[runs["metrics.rmse"] == min_rmse]["run_id"])[0]
     

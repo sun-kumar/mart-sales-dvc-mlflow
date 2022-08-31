@@ -1,0 +1,40 @@
+schema: '2.0'
+stages:
+  preprocessing_transformation:
+    cmd: python package/src/preprocessing_transformations.py --config=params.yaml
+    deps:
+    - path: package/src/preprocessing_transformations.py
+      md5: cfe6d1b63ac052bad86d487423f94e56
+      size: 2920
+  training_evaluation:
+    cmd: python package/src/training_evaluation.py --config=params.yaml
+    deps:
+    - path: package/src/preprocessing_transformations.py
+      md5: cfe6d1b63ac052bad86d487423f94e56
+      size: 2920
+    - path: package/src/training_evaluation.py
+      md5: 105ecbdb0b12feb8611e8e340da1990d
+      size: 6309
+  getting_from_blob:
+    cmd: python package/src/getting_from_blob.py --config=params.yaml
+    deps:
+    - path: package/src/getting_from_blob.py
+      md5: 1c8840eced1baa8689f622a92494da3d
+      size: 2073
+    outs:
+    - path: package/data/raw_files/clientname_data/raw.csv
+      md5: e0df0a56f3f03c084c828b29aaa0f314
+      size: 869537
+  split_data:
+    cmd: python package/src/splitting_data.py --config=params.yaml
+    deps:
+    - path: package/src/splitting_data.py
+      md5: 865ef541bb92b66e816e516c24aafc9c
+      size: 1002
+    outs:
+    - path: package/data/interim_files/test.csv
+      md5: 9b385c378fe5722aae41900d5dca73f4
+      size: 174308
+    - path: package/data/interim_files/train.csv
+      md5: 4996f8c6f304a4de5eb957c874cf03fd
+      size: 697475

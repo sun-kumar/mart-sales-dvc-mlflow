@@ -58,6 +58,7 @@ def train_and_evaluate(config_path):
     mlflow.set_tracking_uri(remote_server_uri)
     mlflow.set_experiment(mlflow_config["experiment_name"])
     
+    
     with mlflow.start_run(run_name=mlflow_config["run_name"]) as mlops_run:
     
         rfr = RandomForestRegressor()
@@ -88,6 +89,7 @@ def train_and_evaluate(config_path):
         mlflow.log_metric("RMSE", rmse)
         mlflow.log_metric("MAE", mae)
         mlflow.log_metric("R2", r2)
+        mlflow.end_run()
         
         
 
@@ -143,11 +145,6 @@ if __name__=="__main__":
 
 # To Do
 
-# Watching all DVC playlist videos in 2x and making notes post that running it in this code
-# Pushing all the above code to github
-# Taking help from : https://github.com/c17hawke/simple-dvc-demo
-# Visit for docs - https://github.com/c17hawke/wafer_mlops_docs
-# Setting up of MLFLOW -- nee to watch mlops videos
 
 # Post Demo Learning:
 # https://discuss.dvc.org/t/dvc-integration-with-azure-ml-pipeline-and-versioning-iot-data/364
@@ -157,3 +154,7 @@ if __name__=="__main__":
 # https://azure.microsoft.com/en-in/services/storage/blobs/
 # https://www.analyticsvidhya.com/blog/2021/06/mlops-tracking-ml-experiments-with-data-version-control/
 # https://neptune.ai/blog/azure-ml-alternatives-for-mlops
+
+
+#################################################################
+

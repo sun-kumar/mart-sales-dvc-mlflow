@@ -41,12 +41,16 @@ estimators:
         - 2
         - 4
         - 6
+        - 8
         - 10
+        - 12
       max_features: 
         - auto
         - log2
       min_samples_leaf:
         - 2
+        - 4
+        
   linear_regression:
   support_vector_regression:
     params:
@@ -73,7 +77,7 @@ reports:
 
 mlflow_config:
   artifacts_dir: artifacts
-  experiment_name: model_iteration1
+  experiment_name: poc_sales_prediction
   run_name: random_forest
   registered_model_name: random_forest_model
   remote_server_uri: http://localhost:1234
