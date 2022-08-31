@@ -1,8 +1,11 @@
 import os
 from glob import glob
 
+import argparse
+import pandas as pd
+
 cwd = os.getcwd()
-data_dirs = ["raw_files","interim_files","processed_files"]
+data_dirs = ["raw_files/clientname_data","interim_files","processed_files"]
 
 for data_dir in data_dirs:
     files = glob(data_dir + r"/*.csv")

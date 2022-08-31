@@ -13,8 +13,9 @@ def read_params(config_path):
 def get_data(config_path):
     config = read_params(config_path)
     # data_path = config["data_source"]["az_source"] # in real case scenario
-    data_path = config["data_source"]["az_source"] # replace with above in real case scenario
-    df = pd.read_csv(data_path)
+    data_path = config["load_data"]["raw_dataset_csv"] # replace with above in real case scenario
+    clientname = config["base"]["clientname"]
+    df = pd.read_csv(data_path + "/" + clientname +"/"+"raw.csv")
     return df
 
 if __name__=="__main__":

@@ -1,4 +1,10 @@
+access_control:
+  account_name: samleuwrnd
+  container_name: ml-dummy-data
+  connection_string: DefaultEndpointsProtocol=https;AccountName=samleuwrnd;AccountKey=ioynEf2DCUDQdgUnf9V/OkYhYjlddzcJxw/BlhavKrpKvmh9weXahmINYg93OEP2CuvH2y7ejcyW+ASt9/HOPg==;EndpointSuffix=core.windows.net
+
 base:
+  clientname: clientname_data
   project: big_mart_sales
   random_state: 42
   target_col: Item_Outlet_Sales 
@@ -7,7 +13,7 @@ data_source:
   az_source: azure://samleuwrnd/poc/data/  # dummy azure storage replace with actual
 
 load_data:
-  raw_dataset_csv: package/data/raw_files/raw.csv
+  raw_dataset_csv: package/data/raw_files/
 
 split_data:
   train_path: package/data/interim_files/train.csv

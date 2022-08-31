@@ -1,8 +1,9 @@
 stages:
-  loading_data:
-    cmd: python package/src/loading_data.py --config=params.yaml
+  getting_from_blob:
+    cmd: python package/src/getting_from_blob.py --config=params.yaml
     deps:
-    - package/src/getting_data.py
+    - package/src/getting_from_blob.py
+    - package/data/raw_files/raw.csv
     outs:
     - package/data/raw_files/raw.csv
   
@@ -17,7 +18,6 @@ stages:
   preprocessing_transformation:
     cmd: python package/src/preprocessing_transformations.py --config=params.yaml
     deps:
-    - package/data/interim_files/train.csv
     - package/src/preprocessing_transformations.py
 
   training_evaluation:
@@ -25,16 +25,8 @@ stages:
     deps:
     - package/src/preprocessing_transformations.py
     - package/src/training_evaluation.py
-    params:
-    - random_forest.max_depth
-    - random_forest.n_estimators
-    outs:
-    - package/models/model.joblib
-
+    
   log_production_model:
     cmd: python package/src/production_model_selection.py --config=params.yaml
     deps:
     - package/src/production_model_selection.py
-    params:
-    - random_forest.max_depth
-    - random_forest.n_estimators

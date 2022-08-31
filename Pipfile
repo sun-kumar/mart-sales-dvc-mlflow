@@ -15,6 +15,7 @@ ipykernel = "*"
 pytest = "*"
 dvc = "*"
 mlflow = "*"
+azure-storage-blob = "*"
 
 [dev-packages]
 ipykernel = "*"

@@ -29,18 +29,11 @@ def eval_metrics(actual, pred):
 
 def train_and_evaluate(config_path):
     config = read_params(config_path)
-    test_data_path = config["processed_data"]["test_path"]
-    train_data_path = config["processed_data"]["train_path"]
+    test_data_path = config["split_data"]["test_path"]
+    train_data_path = config["split_data"]["train_path"]
     random_state = config["base"]["random_state"]
     model_dir = config["model_dir"]
     
-    """Read Me - To do further
-    convert below elasticnet parameters and model into randomforest regressor
-    and also change the same in params.yaml file
-    target is to to achieve this - https://www.analyticsvidhya.com/blog/2020/01/build-your-first-machine-learning-pipeline-using-scikit-learn/
-    with overall schema reference from this - https://github.com/c17hawke/simple-dvc-demo/blob/main/src/train_and_evaluate.py
-     you can also watch video from youtube for reference- https://www.youtube.com/watch?v=-KmOlVSEKWg&t=6570s&ab_channel=KrishNaik
-     complete playlist - https://www.youtube.com/playlist?list=PLZoTAELRMXVOk1pRcOCaG5xtXxgMalpIe"""
 
     max_depth = config["estimators"]["random_forest_regressor"]["params"]["max_depth"]
     min_samples_leaf = config["estimators"]["random_forest_regressor"]["params"]["min_samples_leaf"]
